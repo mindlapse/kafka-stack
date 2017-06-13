@@ -31,7 +31,7 @@ resource "aws_instance" "kafka-node" {
   root_block_device {
     volume_size = 8
     volume_type = "gp2"
-    iops = 0
+    iops =
   }
   tags {
     Name = "kafka-node-${count.index}"
