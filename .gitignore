@@ -2,4 +2,6 @@
 **/*.iml
 **/*.tfstate
 **/*.tfstate.backup
+keystore/**
 *.pem
+terraform/crash.log

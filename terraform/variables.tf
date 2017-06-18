@@ -23,3 +23,19 @@ variable "subnets" {
     us-east-1e = "subnet-396e0e03"
   }
 }
+
+variable "num_brokers" {
+  default = 3
+}
+
+variable "broker_zero_ip" {
+  default = "34.227.128.92"
+}
+
+variable "chef_username" {
+    default = "torontoai"
+}
+
+variable "chef_keyfile" {
+    default = "../keystore/torontoai.pem"
+}
