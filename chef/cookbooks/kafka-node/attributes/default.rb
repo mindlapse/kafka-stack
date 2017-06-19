@@ -1,1 +1,6 @@
-default['broker_id'] = -1
+default['broker_id'] = "-1"
+default['zk_ips'] = [
+    "172.31.69.80",
+    "172.31.35.32",
+    "172.31.28.26"
+]

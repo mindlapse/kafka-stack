@@ -22,11 +22,16 @@ resource "aws_instance" "kafka-node" {
   availability_zone = "${var.availability_zones[count.index%5]}"
   subnet_id = "${var.subnets[var.availability_zones[count.index%5]]}"
 
-  instance_type = "t2.micro"
+  instance_type = "t2.small"
   ami = "${var.ubuntu-ami}"
   key_name = "toronto-ai"
   ebs_optimized = false
-  vpc_security_group_ids = ["${aws_security_group.allow-ssh.id}"]
+  vpc_security_group_ids = [
+    "${aws_security_group.allow-ssh.id}",
+    "${aws_security_group.allow-zk.id}",
+    "${aws_security_group.allow-kafka.id}",
+    "${aws_security_group.ping.id}"
+  ]
 
   root_block_device {
     volume_size = 8
@@ -47,39 +52,20 @@ resource "aws_instance" "kafka-node" {
   # }
 }
 
-data "aws_eip" "broker_zero" {
-  public_ip = "${var.broker_zero_ip}"
+data "aws_eip" "eips" {
+  count = "${aws_instance.kafka-node.count}"
+  public_ip = "${var.eips[count.index]}"
 }
 
-resource "aws_eip_association" "broker_zero_eip" {
-    instance_id = "${aws_instance.kafka-node.0.id}"
-    allocation_id = "${data.aws_eip.broker_zero.id}"
+resource "aws_eip_association" "node_eip_assocs" {
+  count = "${aws_instance.kafka-node.count}"
+  instance_id = "${element(aws_instance.kafka-node.*.id, count.index)}"
+  allocation_id = "${element(data.aws_eip.eips.*.id, count.index)}"
 }
 
-
-resource "aws_security_group" "allow-ssh" {
-  name        = "allow_ssh"
-
-
-  ingress {
-    from_port       = 0
-    to_port         = 22
-    protocol        = "tcp"
-    cidr_blocks     = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
-  }
+output "public_ips" {
+  value = ["${aws_eip_association.node_eip_assocs.*.public_ip}"]
 }
-
-output "broker_zero_ip" {
-  value = "${aws_eip.broker_zero.public_ip}"
-}
-
-output "instance_ips" {
-  value = ["${aws_instance.kafka-node.*.public_ip}"]
+output "private_ips" {
+  value = ["${aws_instance.kafka-node.*.private_ip}"]
 }

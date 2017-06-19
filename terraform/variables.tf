@@ -29,7 +29,15 @@ variable "num_brokers" {
 }
 
 variable "broker_zero_ip" {
-  default = "34.227.128.92"
+  default = "34.207.44.218"
+}
+
+variable "eips" {
+  default = [
+    "34.207.44.218",
+    "34.202.200.37",
+    "34.225.250.141"
+  ]
 }
 
 variable "chef_username" {
