@@ -24,6 +24,15 @@ variable "subnets" {
   }
 }
 
+variable "drives" {
+  type = "list"
+  default = [
+    "vol-0d7c10728cb33851e",    # us-east-1a
+    "vol-0c0ec108b96d095c0",    # us-east-1b
+    "vol-0f6cc1e6b6a85456a"     # us-east-1c
+  ]
+}
+
 variable "num_brokers" {
   default = 3
 }

@@ -63,6 +63,16 @@ resource "aws_eip_association" "node_eip_assocs" {
   allocation_id = "${element(data.aws_eip.eips.*.id, count.index)}"
 }
 
+# Attach pre-existing drives to these instances
+resource "aws_volume_attachment" "kafka-drives" {
+  count = "${aws_instance.kafka-node.count}"
+  device_name = "/dev/sdg"
+  volume_id   = "${var.drives[count.index]}"
+  instance_id = "${element(aws_instance.kafka-node.*.id, count.index)}"
+  skip_destroy = true
+}
+
+
 output "public_ips" {
   value = ["${aws_eip_association.node_eip_assocs.*.public_ip}"]
 }
