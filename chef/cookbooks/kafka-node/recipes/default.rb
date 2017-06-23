@@ -65,6 +65,7 @@ docker_container 'kafka' do
   restart_policy 'on-failure'
   restart_maximum_retry_count 2
   autoremove false
+  # TODO configure the volume
   action :run
   env [
     'KAFKA_HEAP_OPTS=-Xmx384m -Xms384m',

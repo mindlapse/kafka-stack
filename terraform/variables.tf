@@ -54,5 +54,8 @@ variable "chef_username" {
 }
 
 variable "chef_keyfile" {
-    default = "../keystore/torontoai.pem"
+    default = "~/.ssh/aws/toronto-ai.pem"
+}
+variable "chef_client" {
+    default = "/Users/clearwhale/.chef/client.pem"
 }
