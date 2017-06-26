@@ -18,9 +18,38 @@ for i in 0..ips.length-1
   end
 end
 
+
 docker_service 'default' do
   action [:create, :start]
 end
+
+# Add ubuntu to the docker group
+group 'docker' do
+  action :modify
+  members ['ubuntu']
+end
+
+directory '/data/kafka' do
+  owner 'root'
+  group 'docker'
+  mode '0775'
+  recursive true
+  action :create
+end
+
+filesystem "data" do
+  fstype "ext4"
+  device "/dev/xvdg"
+  mount "/data"
+  action [:create, :enable, :mount]
+end
+
+# mount '/vol/kafka' do
+#   enabled true
+#   fstype 'ext4'
+#   device '/dev/xvdg1'
+#   action [:mount, :enable]
+# end
 
 # Pull the images
 
@@ -65,11 +94,11 @@ docker_container 'kafka' do
   restart_policy 'on-failure'
   restart_maximum_retry_count 2
   autoremove false
-  # TODO configure the volume
+  volume '/data/kafka:/kafka'
   action :run
   env [
     'KAFKA_HEAP_OPTS=-Xmx384m -Xms384m',
-    'KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://' + node['hostname'] + ':9092',
+    'KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://' + node["public_ip"] + ':9092',
     'KAFKA_ZOOKEEPER_CONNECT=' + node['hostname'] + ':2181',
     'KAFKA_BROKER_ID=' + node['broker_id']
   ]

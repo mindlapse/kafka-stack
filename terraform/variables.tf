@@ -27,9 +27,9 @@ variable "subnets" {
 variable "drives" {
   type = "list"
   default = [
-    "vol-0d7c10728cb33851e",    # us-east-1a
-    "vol-0c0ec108b96d095c0",    # us-east-1b
-    "vol-0f6cc1e6b6a85456a"     # us-east-1c
+    "vol-0bfdedab330270c38",    # us-east-1a
+    "vol-09d1ff517a22a16ef",    # us-east-1b
+    "vol-0b225d9810231b08c"     # us-east-1c
   ]
 }
 
@@ -57,5 +57,5 @@ variable "chef_keyfile" {
     default = "~/.ssh/aws/toronto-ai.pem"
 }
 variable "chef_client" {
-    default = "/Users/clearwhale/.chef/client.pem"
+    default = "C:\\Users\\sk8rX\\.chef\\client.pem"
 }
