@@ -79,10 +79,11 @@ resource "aws_volume_attachment" "kafka-drives" {
 
 data "template_file" "json" {
   count = "${aws_instance.kafka-node.count}"
-  template = "{ \"broker_id\" : \"$${broker_id}\", \"zk_ips\" : $${zk_ips} }"
+  template = "{ \"broker_id\" : \"$${broker_id}\", \"public_ip\" : \"$${public_ip}\", \"zk_ips\" : $${zk_ips} }"
   vars {
     broker_id = "${count.index+1}"
     zk_ips = "${jsonencode(aws_instance.kafka-node.*.private_ip)}"
+    public_ip = "${element(data.aws_eip.eips.*.public_ip, count.index)}"
   }
 }
 
