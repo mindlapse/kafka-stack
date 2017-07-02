@@ -22,6 +22,20 @@ docker_service 'default' do
   action [:create, :start]
 end
 
+directory '/data' do
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
+end
+
+# Mount the drive
+mount '/data' do
+  device '/dev/xvdg'
+  fstype 'ext4'
+end
+
+
 # Pull the images
 
 docker_image 'wurstmeister/kafka' do
@@ -35,7 +49,6 @@ docker_image 'zookeeper' do
 end
 
 # Launch the containers
-
 
 docker_container 'zookeeper' do
   servers = "ZOO_SERVERS="
@@ -60,11 +73,13 @@ end
 docker_container 'kafka' do
   repo 'wurstmeister/kafka'
   tag kafka_version
+
   port '9092:9092'
   network_mode "host"
   restart_policy 'on-failure'
   restart_maximum_retry_count 2
   autoremove false
+  volume
   # TODO configure the volume
   action :run
   env [

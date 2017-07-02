@@ -1,8 +1,6 @@
 
 provider "aws" {
-
   region     = "us-east-1"
-
 }
 
 //data "aws_vpc" "main_vpc" {
@@ -42,6 +40,7 @@ resource "aws_instance" "kafka-node" {
 
   tags {
     Name = "kafka-node-${count.index}"
+    Hello = "World-${count.index}"
   }
 
 }

@@ -16,3 +16,9 @@ knife ssh -i ~/.ssh/aws/toronto-ai.pem -x ubuntu 'name:*' 'sudo chef-client'
 knife ssh -i ~/.ssh/aws/toronto-ai.pem --no-host-key-verify -x ubuntu 'name:kafka-node-0' 'echo {\"broker_id\":\"1\"} | sudo chef-client -j /dev/stdin'
 knife ssh -i ~/.ssh/aws/toronto-ai.pem --no-host-key-verify  -x ubuntu 'name:kafka-node-1' 'echo {\"broker_id\":\"2\"} | sudo chef-client -j /dev/stdin'
 knife ssh -i ~/.ssh/aws/toronto-ai.pem --no-host-key-verify  -x ubuntu 'name:kafka-node-2' 'echo {\"broker_id\":\"3\"} | sudo chef-client -j /dev/stdin'
+
+
+
+
+
+bin/kafka-topics.sh --create --topic abc --partitions 1 --replication-factor 2 --zookeeper zk0:2181
